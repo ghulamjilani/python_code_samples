@@ -38,7 +38,7 @@
 │   ├── home.html
 │   └── medication_detail.py
 │
-├── /tests                               # # Unit tests for validation and quality assurance
+├── /tests                               # Unit tests for validation and quality assurance
 │   ├── test_healthcare_model.py
 │   ├── test_jwt_utils.py
 │   ├── test_service_models.py
