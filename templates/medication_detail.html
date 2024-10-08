@@ -1,0 +1,65 @@
+{% extends "core.html" %}
+{% load static %}
+{% load tz %}
+{% load i18n %}
+{% block title %}{% trans nav_title %}{% endblock %}
+
+{% block navigation %}
+    {% include "core/mobile.html" %}
+{% endblock%}
+
+{% block content %}
+<div class="flex min-h-full items-center justify-center px-4 lg:px-8">
+  <div class="w-full max-w-md space-y-3">
+
+    {% if medications %}
+        <div class="flex min-h-full items-center justify-center px-4 ">
+            <div class="w-full max-w-md space-y-3">
+                {% for value in medications %}
+                <a href="/health-data/{{value.resource_type}}/{{value.resource_id}}?scope={{value.provider}}~{{med_service}}" class="p-2">
+                     <div class="grid grid-cols-1 bg-neutral-50 p-2 rounded border">
+                         <span  class="text-sky-800">
+                             {{value.title|safe}}
+                             <span class="text-[13px] font-medium capitalize"> ({{value.provider}}) </span>
+                         </span>
+                         <span  class="text-sky-800">{{value.status|safe}}</span>
+                         <span  class="text-sky-700 mt-2 font-medium capitalize break-words">{{value.product}}</span>
+                         <span  class="text-sky-700 mt-2 text-[13px]"> <label class="font-medium">{% trans "Date" %}:</label>  {{value.start|date:"SHORT_DATE_FORMAT"}} {% if value.end %} {% trans "to" %} {{value.end|date:"SHORT_DATE_FORMAT"}}{% endif %}</span>
+                         {% if value.dosage %}
+                            <span  class="text-sky-700 mt-2 capitalize text-[13px]"> <label class="font-medium">{% trans "instructions" %}:</label> {{value.dosage}}</span>
+                         {% endif %}
+                         {% if value.prescriber %}
+                            <span  class="text-sky-700 mt-2 capitalize text-[13px]"> <label class="font-medium">{% trans "prescriber" %}:</label> {{value.prescriber}}</span>
+                         {% endif %}
+                         {% if value.quantity %}
+                            <span  class="text-sky-700 mt-2 capitalize text-[13px]"> <label class="font-medium">{% trans "quantity" %}:</label> {{value.quantity}}</span>
+                         {% endif %}
+                         {% if value.duration %}
+                            <span  class="text-sky-700 mt-2 capitalize text-[13px]"> <label class="font-medium">{% trans "duration" %}:</label> {{value.duration}}</span>
+                         {% endif %}
+                         {% if value.performer %}
+                            <span  class="text-sky-700 mt-2 capitalize text-[13px]"> <label class="font-medium">{% trans "performer" %}:</label> {{value.performer}}</span>
+                         {% endif %}
+                         {% if value.author %}
+                            <span  class="text-sky-700 mt-2 capitalize text-[13px]"> <label class="font-medium">{% trans "author" %}:</label> {{value.author}}</span>
+                         {% endif %}
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+     <div class="alert-info">
+        <span class="mif-info mr-1"></span>
+         {% trans "There is no data to show for this resoruce" %}
+     </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+
+{% endblock %}

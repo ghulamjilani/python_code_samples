@@ -1,0 +1,128 @@
+{% extends "core.html" %}
+{% load static %}
+{% load render_tags %}
+
+{% load i18n %}
+{% block title %}{% trans "Audit logs" %}
+{% endblock %}
+
+{% block meta_data %}{% endblock %}
+{% block navigation %}
+    {% with page_title="Audit logs" %}
+        {% include "core/mobile.html" with nav_title=page_title|translate %}
+    {% endwith %}
+{% endblock%}
+{% block content %}
+
+<div class="flex min-h-full items-center justify-center px-4 lg:px-8">
+  <div class="w-full  space-y-2">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left text-gray-500">
+                <caption class="text-xl text-gray-700 ">{% trans "Audit logs" %}</caption>
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                    <tr>
+                        <th class="px-6 py-3">{% trans "Date" %}</th>
+                        <th class="px-6 py-3">{% trans "Code" %}</th>
+                        <th class="px-6 py-3">{% trans "Outcome" %}</th>
+                        <th class="px-6 py-3">{% trans "User" %}</th>
+                        <th class="px-6 py-3">{% trans "Object" %}</th>
+                        <th style="width:30%" class="px-6 py-3">{% trans "Source" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for line in nav_events %}
+                        <tr class="{% if line.outcome == 1 %}bg-yellow-400 text-white{% endif %} {% if line.outcome == 2 %}bg-red-600 fg-white{% endif %} border-b">
+                            <td class="px-6 py-4">{{line.event_date|date:"Y-m-d T H:i:s" }}</td>
+                            <td class="px-6 py-4">{{line.identifier_str}}</td>
+                            <td class="px-6 py-4">{{line.outcome_str}}</td>
+                            <td class="px-6 py-4">{{line.user}}</td>
+                            <td class="px-6 py-4">{{line.object_id}}</td>
+                            <td class="px-6 py-4">{{line.event_source|truncatechars:50}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if nav_events.has_other_pages %}
+        <div class="flex min-h-full items-center justify-center pt-4 pb-4">
+            <ul class="inline-flex items-center -space-x-px">
+                <!--PREVIOUS BUTTON-->
+                {% if nav_events.has_previous %}
+                    <li class="page-item">
+                        <a class="pgo-page-first" href="?page=1">
+                            <i class='bx bx-first-page'></i>
+                        </a>
+                    </li>
+                    <li class="page-item ">
+                        <a class="pgo-page-prev" href="?page={{ nav_events.previous_page_number }}">
+                            <i class='bx bx-chevron-left'></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="?page=1">
+                              <i class='bx bx-first-page'></i>
+                        </a>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="px-3 py-2 ml-0 leading-tight text-gray-300 border border-gray-300 bg-gray-100">
+                            <i class='bx bx-chevron-left'></i>
+                        </span>
+                    </li>
+                {% endif %}
+
+                {% for i in pages_display %}
+
+                    {% if nav_events.number == i %}
+                        <li aria-current="page">
+                            <span class="pgo-page-active">{{ i }}</span>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a class="pgo-page" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                <!--NEXT BUTTON-->
+                {% if nav_events.has_next %}
+                    <li class="page-item">
+                        <a class="pgo-page-next" href="?page={{ nav_events.next_page_number }}">
+                            <i class='bx bx-chevron-right' ></i>
+                        </a>
+                    </li>
+                    <li class="page-item ">
+                        <a class="pgo-page-last" href="?page={{ nav_events.paginator.num_pages }}">
+                            <i class='bx bx-last-page' ></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="px-3 py-2 ml-0 leading-tight text-gray-300 border border-gray-300 bg-gray-100">
+                           <i class='bx bx-chevron-right' ></i>
+                        </span>
+                    </li>
+                    <li class="page-item disabled">
+                        <a class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="?page={{ nav_events.paginator.num_pages }}">
+                             <i class='bx bx-last-page' ></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+            <h6 class="text-center pb-4">
+                Page
+                {{ nav_events.number }}
+                of
+                {{ nav_events.paginator.num_pages }}.</h6>
+      {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

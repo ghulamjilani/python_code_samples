@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+{% load i18n %}
+{% load sri %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!--{% sri_static "css/pgo.css" %}-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <link href="{% static 'css/pgo.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/saurabh.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+
+    {% block meta_data %}{% endblock meta_data %}
+    <title> {% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <div class="content">
+        {% block navigation %}{% endblock navigation %}
+
+        {% include "core/messages.html" %}
+
+        <div class="container mx-auto  max-w-5xl">
+            {% block content %}{% endblock content %}
+        </div>
+    </div>
+
+    <div class="footer container mx-auto  max-w-5xl">
+        {% block footer %}{% endblock footer %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    {% sri_static "js/htmx.min.1.9.12.js" %}
+    <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/response-targets.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
+    {% sri_static "js/pgo.js" %}
+
+    {% block js %}{% endblock js %}
+</body>
+</html>

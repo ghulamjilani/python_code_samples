@@ -1,0 +1,105 @@
+{% extends "core.html" %}
+{% load static %}
+{% load render_tags %}
+
+{% load i18n %}
+{% block title %}{% trans "Home" %}{% endblock %}
+
+{% block meta_data %}{% endblock %}
+{% block navigation %}
+    {% include "core/nav_home.html" %}
+{% endblock%}
+
+{% block content %}
+
+<div class="flex min-h-full items-center justify-center px-4 lg:px-8 content">
+  <div class="w-full max-w-md space-y-3 healthHeading">
+
+      <h1 class="text-gray-700 text-3xl font-bold"> {% trans "Your personal health environment" %}</h1>
+
+
+
+      <div class="text-gray-500 titlecolor introlist py-3">
+          {% trans "Below you find the healthcare providers linked to your PGO. Add more if any are missing." %}
+      </div>
+      {% if not user_providers and user_medications == 0 %}
+            <div class="remarkbox healthcaretxt">
+                <p class="p-2">
+                {% trans "There is no collected data yet, please add data from a healthcare provider source" %}
+                </p>
+            </div>
+          {% else %}
+            {% if user_medications > 0 %}
+                <a href="{% url 'medication_menu' %}">
+                <div class="border-b-[1px] service-form flex py-4 items-center">
+                    <div class="flex-1 text-sky-800 font-medium">
+                        {% trans "Medication" %}
+                    </div>
+                    <div class="flex-none">
+                        <i class='bx bx-chevron-right text-gray-400 text-xl'></i>
+                    </div>
+                </div>
+                </a>
+            {% endif %}
+            {% for modified_name, prov in user_providers %}
+                <form method="post" action="{% url 'hd_services' provider=prov %}" class="cursor-pointer">
+                    {% csrf_token %}
+                    <div class="border-b-[1px] item-divider flex py-4 items-center">
+                        <div class="flex-1 text-sky-900 text-lg titlecolor">
+                                <button class="w-full text-start" type="submit" value="{{prov}}">
+                                    {{modified_name|cap_value}}
+                                </button>
+                        </div>
+                        <div class="flex-none arrowIcon">
+                            <!-- <i class='bx bx-chevron-right text-gray-500 7text-xl'></i> -->
+                            <img class="w-8 h-12" src="{% static 'img/rightarrow.svg' %}" alt="alert">
+                        </div>
+                    </div>
+                </form>
+            {% endfor %}
+          {% endif %}
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block footer %}
+<div class="bg-white">
+        <div class="flex min-h-full items-center justify-center pb-4 pt-4">
+
+          <p class="text-gray-500 text-lg mr-2">
+                <i class='bx bx-world'></i>
+          </p>
+          <form action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ redirect_to }}"/>
+
+                <select id="lang_code_select" name="language"
+                        class="rounded-md px-3 py-1 bg-zinc-100 border border border-transparent">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% for lang in LANGUAGES %}
+                        <option
+                            value="{{ lang.0 }}"
+                            {% if lang.0 == LANGUAGE_CODE %}
+                            selected="selected"
+                            {% endif %}>
+                            {{ lang.0 }}                        &nbsp;
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+
+        </div>
+        <div class="flex items-center justify-center pt-2">
+            <a class="pgo-btn-primary px-6 py-2 mb-4 block mx-4"
+                 href="{% url 'providers' %}"
+                 data-role="ripple">
+                  <i class='bx bx-plus'></i>
+                  {% trans "Add healthcare provider" %}
+            </a>
+        </div>
+    <br>
+</div>
+{% endblock %}
